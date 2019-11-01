@@ -22,8 +22,9 @@ class Game:
         self.surface = surface
         self.background_color = pygame.Color('black')
         self.wall_1 = wall('orange',[450, 150],[20, 100], self.surface)
-        p = pyaudio.PyaAdio()
-        self.stream = p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,frame_per_buffer=CHUNK)
+        p = pyaudio.PyAudio()
+        self.stream = p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,frames_per_buffer=CHUNK)
+        data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
         sum = 0
         count = 0
         for i in range(len(data)):
@@ -32,9 +33,9 @@ class Game:
         self.baseline = sum/count
     def play(self):
         while self.close_clicked == False:
-            data = np.fromstring(self.stream.read(CHUNK),dtype=np.int16)
-            jump = jump_or_not(data)
-            self.update
+            data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
+            jump = self.jump_or_not(data)
+            self.update(jump)
             self.draw()
             self.handle_events()
             if self.continue_game == True:
@@ -49,6 +50,7 @@ class Game:
             count = count + 1
         mean = sum/count
         if mean > self.baseline:
+            print("mean: " + str(mean) + ",baseline: " + str(self.baseline))
             return True
         else:
             return False
@@ -59,8 +61,8 @@ class Game:
         
         pygame.display.update() #displays updated surface
        
-    def update(self):
-        self.wall.apply_gravity()
+    def update(self,jump):
+        self.wall_1.apply_gravity()
         if jump == True:
             self.wall_1.move([0,-20])
         pass
@@ -119,7 +121,8 @@ class wall:
         pygame.draw.rect(self.surface, self.color, self.wall)
     
     def apply_gravity(self):
-        size = self.surface.get_size() # tuple (width, height)
+        pass
+        '''size = self.surface.get_size() # tuple (width, height)
         change_in_velocity = 0.50
         if self.velocity[1] == 0:
             self.move([0,19])
@@ -127,7 +130,7 @@ class wall:
         # check if on ground
         if self.position[1] - self.dimensions[1] >= size[1]:
             #self.position[1] = size[1] - self.dimensions[1]
-            self.velocity[1] = 0
+            self.velocity[1] = 0'''
         
 
 def main():
