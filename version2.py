@@ -16,11 +16,12 @@ class Game:
         self.surface = surface
         self.background_color = pygame.Color('black')
    
-        self.wall_1 = wall('orange',[450, 150],[20, 100], self.surface)
+        self.wall_1 = wall('orange',[20,20],[450, 150],[20, 100], self.surface)
+        # wall_colour, velocity, wall_position, wall_dimensions, surface
     
     def play(self):
         while self.close_clicked == False:
-            self.update
+            self.update()
             self.draw()
             self.handle_events()
             if self.continue_game == True:
@@ -36,8 +37,7 @@ class Game:
         pygame.display.update() #displays updated surface
        
     def update(self):
-        self.wall.apply_gravity()
-        pass
+        self.wall_1.apply_gravity()
     
     def decide_continue(self):
         pass
@@ -49,7 +49,8 @@ class Game:
                 self.close_clicked = True
             if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        self.wall_1.move([0,20])   
+                        self.wall_1.move([0,20])
+            
         keys = pygame.key.get_pressed()  
         if keys [pygame.K_UP]:
             self.wall_1.move([0,-20])
@@ -64,18 +65,22 @@ class Game:
             self.wall_1.apply_gravity()
                 
 class wall:
-    def __init__(self, wall_colour, wall_position, wall_dimensions, surface):
+    def __init__(self, wall_colour, velocity, wall_position, wall_dimensions, surface):
         self.color = pygame.Color(wall_colour)
         self.position = wall_position
         self.dimensions = wall_dimensions
         self.wall = [wall_position, wall_dimensions]
         self.surface = surface
-    def move(self, velocity):
         self.velocity = velocity 
 
+    def move(self, velocity):
         self.position[0] = self.position[0] + self.velocity[0]
         self.position[1] = self.position[1] + self.velocity[1]
-        
+        # now = time.time()
+        # later = time.time()
+        # change_in_time = later - now
+        # if change_in_time != 0:
+
         size = self.surface.get_size() # tuple (width, height)
         # check right index = 0, check bottom index = 1
         for index in range(0,2):
