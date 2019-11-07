@@ -39,7 +39,6 @@ class Game:
             self.draw()
             self.handle_events()
             if self.continue_game == True:
-
                 self.decide_continue
             self.game_clock.tick(self.frame_rate)
     def jump_or_not(self,data):
@@ -58,13 +57,11 @@ class Game:
         # Draw all game objects
         self.surface.fill(self.background_color) #clear display surface first
         self.wall_1.draw()
-        
         pygame.display.update() #displays updated surface
        
     def update(self,jump):
         if jump == True:
             self.wall_1.move('-y')
-        pass
     
     def decide_continue(self):
         pass
@@ -132,7 +129,7 @@ class wall:
         self.gravity_strength = gravitation
         size = self.surface.get_size() # tuple (width, height)
 
-        self.position[1] = self.position[1] + 0.5*self.velocity[1]
+        self.position[1] = self.position[1] - 0.5*self.velocity[1]
         self.position[1] += self.gravity_strength
 
         # check if on ground
