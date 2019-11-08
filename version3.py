@@ -18,7 +18,7 @@ class Game:
         self.close_clicked = False
         self.continue_game = True
         self.game_clock = pygame.time.Clock()
-        self.frame_rate = 60
+        self.frame_rate = 120
         self.surface = surface
         self.background_color = pygame.Color('black')
         self.wall_1 = wall('orange',[450, 150],[20, 100], [20,20], self.surface)
@@ -35,9 +35,9 @@ class Game:
         while self.close_clicked == False:
             data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
             jump = self.jump_or_not(data)
-            self.update(jump)
+            #self.update(jump)
             self.draw()
-            self.handle_events()
+            self.handle_events(jump)
             if self.continue_game == True:
                 self.decide_continue
             self.game_clock.tick(self.frame_rate)
@@ -48,8 +48,8 @@ class Game:
             sum = sum + data[i]
             count = count + 1
         mean = sum/count
-        if mean > self.baseline:
-            print("mean: " + str(mean) + ",baseline: " + str(self.baseline))
+        if mean > self.baseline+10:
+            print("mean: " + str(mean) + ", baseline: " + str(self.baseline))
             return True
         else:
             return False
@@ -66,7 +66,7 @@ class Game:
     def decide_continue(self):
         pass
 
-    def handle_events(self):
+    def handle_events(self, jump):
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -83,8 +83,10 @@ class Game:
             self.wall_1.move('-x')
         if keys [pygame.K_RIGHT]:
             self.wall_1.move('x')
+        if jump:
+            self.wall_1.move('-y')
         else:
-            self.wall_1.apply_gravity(1.81)
+            self.wall_1.apply_gravity(1.00)
                 
 class wall:
     def __init__(self, wall_colour, wall_position, wall_dimensions, velocity, surface):
