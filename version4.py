@@ -141,9 +141,10 @@ class wall:
     def jump(self, amount):
         size = self.surface.get_size()
         self.position[1] = self.position[1] - amount
+        #top?
         for index in range(0,2):
-            if self.position[index] + self.dimensions[index] >= size[index]:
-                self.position[index] = size[index] - self.dimensions[index]
+            if self.position[index] <= 0:
+                self.position[index] = 0
     
     def draw(self):
         pygame.draw.rect(self.surface, self.color, self.wall)
