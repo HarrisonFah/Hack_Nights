@@ -31,14 +31,16 @@ class Game:
             if data[i] >= 0:
                 sum = sum + data[i]
                 count = count + 1
-        self.baseline = sum/count
+        self.baseline = 0
+        if count != 0:
+            self.baseline = sum/count
     def play(self):
         while self.close_clicked == False:
             data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
-            jump = self.jump_or_not(data)
+            jumpData = self.jump_or_not(data)
             #self.update(jump)
             self.draw()
-            self.handle_events(jump)
+            self.handle_events(jumpData)
             if self.continue_game == True:
                 self.decide_continue
             self.game_clock.tick(self.frame_rate)
@@ -49,17 +51,25 @@ class Game:
             if data[i] >= 0:
                 sum = sum + data[i]
                 count = count + 1
-        mean = sum/count
-<<<<<<< HEAD
-        if mean > self.baseline*3:
-            print("mean: " + str(mean) + ", baseline: " + str(self.baseline))
-=======
-        if mean > self.baseline+10:
-            print("mean: " + str(mean) + ",baseline: " + str(self.baseline))
->>>>>>> a1412e67116e4250516686c9cf87996b13c62eed
-            return True
+        mean = 0
+        if count != 0:
+            mean = sum/count
+
+        print("mean: " + str(mean) + ", baseline: " + str(self.baseline))
+        jumpVelocity = 0
+        difference = mean - self.baseline+500
+        if difference > 0:
+            if difference > 1500:
+                jumpVelocity = 20
+            elif difference > 1000:
+                jumpVelocity = 15
+            elif difference > 500:
+                jumpVelocity = 10
+            else:
+                jumpVelocity = 5
+            return (1, jumpVelocity)
         else:
-            return False
+            return (0, jumpVelocity)
     def draw(self):
         # Draw all game objects
         self.surface.fill(self.background_color) #clear display surface first
@@ -73,7 +83,7 @@ class Game:
     def decide_continue(self):
         pass
 
-    def handle_events(self, jump):
+    def handle_events(self, jumpData):
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -90,8 +100,8 @@ class Game:
             self.wall_1.move('-x')
         if keys [pygame.K_RIGHT]:
             self.wall_1.move('x')
-        if jump:
-            self.wall_1.move('-y')
+        if jumpData[0] == 1:
+            self.wall_1.jump(jumpData[1])
         else:
             self.wall_1.apply_gravity(1.81)
                 
@@ -128,8 +138,12 @@ class wall:
             if self.position[index] <= 0:
                 self.position[index] = 0
     
-    def jump(self):
-        pass
+    def jump(self, amount):
+        size = self.surface.get_size()
+        self.position[1] = self.position[1] - amount
+        for index in range(0,2):
+            if self.position[index] + self.dimensions[index] >= size[index]:
+                self.position[index] = size[index] - self.dimensions[index]
     
     def draw(self):
         pygame.draw.rect(self.surface, self.color, self.wall)
