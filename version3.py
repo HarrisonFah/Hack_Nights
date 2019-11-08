@@ -28,8 +28,9 @@ class Game:
         sum = 0
         count = 0
         for i in range(len(data)):
-            sum = sum + data[i]
-            count = count + 1
+            if data[i] >= 0:
+                sum = sum + data[i]
+                count = count + 1
         self.baseline = sum/count
     def play(self):
         while self.close_clicked == False:
@@ -45,10 +46,11 @@ class Game:
         count = 0
         sum = 0
         for i in range(len(data)):
-            sum = sum + data[i]
-            count = count + 1
+            if data[i] >= 0:
+                sum = sum + data[i]
+                count = count + 1
         mean = sum/count
-        if mean > self.baseline+10:
+        if mean > self.baseline*3:
             print("mean: " + str(mean) + ", baseline: " + str(self.baseline))
             return True
         else:
@@ -86,7 +88,7 @@ class Game:
         if jump:
             self.wall_1.move('-y')
         else:
-            self.wall_1.apply_gravity(1.00)
+            self.wall_1.apply_gravity(1.81)
                 
 class wall:
     def __init__(self, wall_colour, wall_position, wall_dimensions, velocity, surface):
