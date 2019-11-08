@@ -21,7 +21,7 @@ class Game:
         self.frame_rate = 60
         self.surface = surface
         self.background_color = pygame.Color('black')
-        self.wall_1 = wall('orange',[450, 150],[20, 100], [20,20], self.surface)
+        self.wall_1 = wall('orange',[450, 150],[20, 100], [10,10], self.surface)
         p = pyaudio.PyAudio()
         self.stream = p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,frames_per_buffer=CHUNK)
         data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
@@ -48,7 +48,7 @@ class Game:
             sum = sum + data[i]
             count = count + 1
         mean = sum/count
-        if mean > self.baseline:
+        if mean > self.baseline+10:
             print("mean: " + str(mean) + ",baseline: " + str(self.baseline))
             return True
         else:
