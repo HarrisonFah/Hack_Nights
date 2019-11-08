@@ -102,10 +102,10 @@ class wall:
             self.position[0] = self.position[0] - self.velocity[0]
         if self.direction == 'x':
             self.position[0] = self.position[0] + self.velocity[0]
-        if self.direction == '-y':
-            self.position[1] = self.position[1] - self.velocity[1]
         if self.direction == 'y':
             self.position[1] = self.position[1] + self.velocity[1]
+        if self.direction == '-y':
+            self.position[1] = self.position[1] - self.velocity[1]
             
  
         size = self.surface.get_size() # tuple (width, height)
@@ -129,8 +129,8 @@ class wall:
         self.gravity_strength = gravitation
         size = self.surface.get_size() # tuple (width, height)
 
-        self.position[1] = self.position[1] - 0.5*self.velocity[1]
-        self.position[1] += self.gravity_strength
+        self.position[1] = self.position[1] + 0.5*self.velocity[1]
+        self.position[1] = self.position[1]  + self.gravity_strength
 
         # check if on ground
         if self.position[1] + self.dimensions[1] >= size[1]:
