@@ -57,7 +57,8 @@ class Game:
 
         print("mean: " + str(mean) + ", baseline: " + str(self.baseline))
         jumpVelocity = 0
-        difference = mean - self.baseline+500
+        difference = mean - self.baseline
+        print(difference)
         if difference > 0:
             if difference > 1500:
                 jumpVelocity = 20
@@ -67,6 +68,7 @@ class Game:
                 jumpVelocity = 10
             else:
                 jumpVelocity = 5
+            print("jumpVelocity: " + str(jumpVelocity))
             return (1, jumpVelocity)
         else:
             return (0, jumpVelocity)
