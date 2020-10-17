@@ -33,7 +33,7 @@ class Game:
                 count = count + 1
         self.baseline = 0
         if count != 0:
-            self.baseline = sum/count
+            self.baseline = max(sum/count, 5)
     def play(self):
         while self.close_clicked == False:
             data = np.frombuffer(self.stream.read(CHUNK),dtype=np.int16)
